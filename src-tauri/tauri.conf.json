@@ -1,0 +1,57 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Carla",
+  "version": "0.1.0",
+  "identifier": "ai.carla.desktop",
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "beforeBuildCommand": "pnpm build",
+    "devUrl": "http://localhost:1420",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "macOSPrivateApi": true,
+    "security": {
+      "assetProtocol": {
+        "enable": true,
+        "scope": [
+          "$APPLOCALDATA/meetings/*",
+          "$APPLOCALDATA/meetings/**"
+        ]
+      }
+    },
+    "windows": [
+      {
+        "label": "main",
+        "title": "Carla",
+        "width": 1440,
+        "height": 920,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ]
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/icon.png",
+      "icons/icon.icns"
+    ],
+    "resources": [
+      "bin/CarlaNativeHelper",
+      "bin/ffmpeg",
+      "../scripts/transcription_runtime.py",
+      "../.venv"
+    ],
+    "macOS": {
+      "minimumSystemVersion": "14.0",
+      "files": {
+        "MacOS/CarlaNativeHelper": "bin/CarlaNativeHelper",
+        "Resources/ffmpeg": "bin/ffmpeg",
+        "Resources/transcription_runtime.py": "../scripts/transcription_runtime.py",
+        "Resources/.venv": "../.venv"
+      }
+    }
+  }
+}

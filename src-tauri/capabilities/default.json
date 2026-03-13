@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Default desktop capability for Carla windows.",
+  "windows": ["main", "transcript", "settings", "recording-notch"],
+  "permissions": ["core:default", "opener:default"]
+}
