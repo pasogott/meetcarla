@@ -4,6 +4,12 @@ on:
   release:
     types:
       - published
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to attach the DMG to
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -15,16 +21,16 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.28.1
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
@@ -45,7 +51,7 @@ jobs:
       - name: Recreate bundled transcription runtime
         run: |
           rm -rf .venv
-          uv venv .venv --python 3.12
+          python -m venv --copies .venv
           uv pip install --python .venv/bin/python -r requirements-transcription.txt
           .venv/bin/python -c "import whisper, huggingface_hub, mlx_whisper"
 
@@ -55,4 +61,5 @@ jobs:
       - name: Upload DMG to release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event.release.tag_name || inputs.tag }}
           files: src-tauri/target/release/bundle/dmg/*.dmg
